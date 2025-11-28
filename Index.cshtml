@@ -1,0 +1,92 @@
+﻿@model List<QuanLyBanGiay.ViewModels.CartItemViewModel>
+
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2>Giỏ hàng của bạn</h2>
+    <hr />
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-info text-center">
+            <h4>Giỏ hàng đang trống!</h4>
+            <a href="/" class="btn btn-primary mt-3">Quay lại mua sắm</a>
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered text-center">
+            <thead class="bg-light">
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@item.AnhUrl" style="width: 80px; height: auto;" />
+                        </td>
+                        <td class="align-middle text-start">@item.TenSP</td>
+                        <td class="align-middle">@item.Gia.ToString("N0")</td>
+
+                        <!-- CỘT SỐ LƯỢNG & NÚT CẬP NHẬT -->
+                        <td class="align-middle">
+                            <form action="@Url.Action("UpdateCart", "Cart")" method="post" class="d-flex justify-content-center align-items-center">
+                                <!-- Input ẩn chứa ID sản phẩm -->
+                                <input type="hidden" name="id" value="@item.MaSP" />
+
+                                <!-- Input số lượng (người dùng nhập) -->
+                                <input type="number" name="soluong" value="@item.SoLuong" min="1" class="form-control text-center me-2" style="width: 70px;" />
+
+                                <!-- Nút Cập nhật -->
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-arrow-clockwise"></i> Cập nhật
+                                </button>
+                            </form>
+                        </td>
+
+                        <td class="align-middle fw-bold text-danger">@item.ThanhTien.ToString("N0")</td>
+
+                        <!-- CỘT NÚT XÓA -->
+                        <td class="align-middle">
+                            <form action="@Url.Action("UpdateCart", "Cart")" method="post">
+                                <!-- Input ẩn chứa ID -->
+                                <input type="hidden" name="id" value="@item.MaSP" />
+
+                                <!-- Mẹo: Gửi số lượng = 0 để Controller tự hiểu là xóa -->
+                                <input type="hidden" name="soluong" value="0" />
+
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa giày này?');">
+                                    Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-end fw-bold fs-5">Tổng cộng:</td>
+                    <td colspan="2" class="text-danger fw-bold fs-5">
+                        @Model.Sum(x => x.ThanhTien).ToString("N0") đ
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="text-end">
+            <a href="/" class="btn btn-outline-secondary">Tiếp tục mua hàng</a>
+            <a href="/Cart/Checkout" class="btn btn-danger ms-2">Tiến hành thanh toán</a>
+        </div>
+    }
+</div>

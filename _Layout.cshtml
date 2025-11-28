@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Bán Giày Thể Thao</title>
+    <!-- Dùng Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bg-custom {
+            background-color: #D50000;
+        }
+        /* Màu đỏ thể thao */
+        .text-custom {
+            color: #D50000;
+        }
+
+        .btn-custom {
+            background-color: #D50000;
+            color: white;
+        }
+
+            .btn-custom:hover {
+                background-color: #B71C1C;
+                color: white;
+            }
+        /* Thêm style cho dropdown hover nhẹ nhàng hơn nếu muốn */
+        .dropdown-item:active {
+            background-color: #D50000;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">SPORT SHOES</a>
+
+            <!-- Nút Toggle cho Mobile (Responsive) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+
+                <!-- 1. MENU BÊN TRÁI (Trang chủ + Danh mục) -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Trang chủ</a>
+                    </li>
+
+                    <!-- Gọi Partial View Danh mục tại đây -->
+                    <!-- Lưu ý: Bạn phải đã tạo Action CategoryMenu trong HomeController như hướng dẫn trước -->
+                    @Html.Action("CategoryMenu", "Home")
+                </ul>
+
+                <!-- 2. MENU BÊN PHẢI (Giỏ hàng + User) -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Cart">
+                            Giỏ hàng
+                            <!-- Hiển thị số lượng sản phẩm trong giỏ -->
+                            @{
+                                var cart = Session["Cart"] as List<QuanLyBanGiay.ViewModels.CartItemViewModel>;
+                                int count = cart != null ? cart.Sum(x => x.SoLuong) : 0;
+                            }
+                            <span class="badge bg-warning text-dark">@count</span>
+                        </a>
+                    </li>
+
+                    @if (Session["User"] == null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Account/Login">Đăng nhập</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light btn-sm ms-2 mt-1 px-3" href="/Account/Register">Đăng ký</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Xin chào, @Session["UserName"]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"] == true)
+                                {
+                                    <li><a class="dropdown-item" href="/Admin/Dashboard">Quản lý (Admin)</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                }
+                                <li><a class="dropdown-item" href="/Cart/MyOrders">Đơn hàng của tôi</a></li>
+                                <li><a class="dropdown-item" href="/Account/Logout">Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4" style="min-height: 600px;">
+        @RenderBody()
+    </div>
+
+    <footer class="bg-dark text-white text-center p-4 mt-5">
+        <p class="mb-0">&copy; 2025 - Web Bán Giày Thể Thao. All rights reserved.</p>
+    </footer>
+
+    <!-- 3. QUAN TRỌNG: Script Bootstrap (đặt cuối body để Dropdown hoạt động) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

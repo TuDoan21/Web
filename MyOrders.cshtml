@@ -1,0 +1,74 @@
+﻿@model IEnumerable<QuanLyBanGiay.Models.HoaDon>
+
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-custom">Lịch sử đơn hàng của tôi</h2>
+
+    @if (Model == null || Model.Count() == 0)
+    {
+        <div class="alert alert-warning">
+            Bạn chưa có đơn hàng nào. <a href="/" class="alert-link">Mua sắm ngay</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Địa chỉ nhận</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết sản phẩm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">#@item.MaHD</td>
+                            <td>@(item.NgayLap.HasValue ? item.NgayLap.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+                            <td>
+                                <div>@item.DiaChi</div>
+                                <small class="text-muted">SĐT: @item.SDT</small>
+                            </td>
+                            <td class="text-danger fw-bold">@item.TongTien.ToString("N0") đ</td>
+                            <td>
+                                @if (item.TrangThai == "Hoàn thành")
+                                {
+                                    <span class="badge bg-success">Hoàn thành</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">@item.TrangThai</span>
+                                }
+                            </td>
+                            <td>
+                                <!-- Hiển thị danh sách giày trong đơn hàng này -->
+                                <ul class="list-unstyled mb-0 small">
+                                    @foreach (var chitiet in item.ChiTietHoaDons)
+                                    {
+                                        <li>
+                                            • @chitiet.SanPham.TenSP
+                                            <span class="text-muted">(x@(chitiet.SoLuong))</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3">
+            <a href="/" class="btn btn-outline-secondary">← Quay lại trang chủ</a>
+        </div>
+    }
+</div>

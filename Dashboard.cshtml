@@ -1,0 +1,56 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<h2>Báo cáo doanh thu</h2>
+<div style="width: 80%; margin: auto;">
+    <canvas id="revenueChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/Admin/GetRevenueData')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => new Date(parseInt(item.Date.substr(6))).toLocaleDateString());
+            const values = data.map(item => item.Total);
+
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: values,
+                        backgroundColor: '#D50000'
+                    }]
+                }
+            });
+        });
+</script>
+@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<h2>Báo cáo doanh thu</h2>
+<div style="width: 80%; margin: auto;">
+    <canvas id="revenueChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/Admin/GetRevenueData')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => new Date(parseInt(item.Date.substr(6))).toLocaleDateString());
+            const values = data.map(item => item.Total);
+
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: values,
+                        backgroundColor: '#D50000'
+                    }]
+                }
+            });
+        });
+</script>

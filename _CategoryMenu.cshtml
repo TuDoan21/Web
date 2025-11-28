@@ -1,0 +1,19 @@
+﻿@model IEnumerable<QuanLyBanGiay.Models.LoaiGiay>
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+        Danh mục
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/Home/Index">Tất cả sản phẩm</a></li>
+        <li><hr class="dropdown-divider"></li>
+        @foreach (var item in Model)
+        {
+            <li>
+                <a class="dropdown-item" href="/Home/Index?maLoai=@item.MaLoai">
+                    @item.TenLoai
+                </a>
+            </li>
+        }
+    </ul>
+</li>
